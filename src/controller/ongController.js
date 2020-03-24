@@ -1,0 +1,26 @@
+const connection = require("../database/conection");
+const crypto = require("crypto"); //nao precisa instalar ja vem no node
+
+module.exports = {
+  async create(req, res) {
+    const { name, email, whatsapp, city, uf } = req.body;
+    const id = crypto.randomBytes(4).toString("HEX");
+    //gera 4 bytes hexadecimal
+
+    await connection("ongs").insert({
+      id,
+      name,
+      email,
+      whatsapp,
+      city,
+      uf
+    });
+    return res.json({ id });
+  },
+
+  async index(req, res) {
+    const ongs = await connection("ongs").select("*");
+
+    return res.json(ongs);
+  }
+};
